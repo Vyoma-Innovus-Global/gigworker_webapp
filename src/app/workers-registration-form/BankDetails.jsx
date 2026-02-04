@@ -123,7 +123,7 @@ export default function BankDetailsForm({ formData, setFormData }) {
     }
 
     fetchSavedBankData();
-  }, []);
+  }, [formData?.self_bank_id, formData?.self_bank_ifsc_code, formData?.nominee_bank_id, formData?.nominee_bank_ifsc_code]); // ✅ Add dependencies
 
   // Update text inputs; convert value to uppercase.
   const handleChange = (e) => {
@@ -203,7 +203,7 @@ export default function BankDetailsForm({ formData, setFormData }) {
                                   (bank) => bank.label === selectedLabel
                                 );
                                 if (!selectedBank) return;
-                              
+
                                 setFormData((prev) => ({
                                   ...prev,
                                   self_bank_id: Number(selectedBank.value),

@@ -595,28 +595,28 @@ function AddressDetailsSection({ formData, setFormData }) {
 
       {/* Permanent Address */}
       <div className="p-4 border rounded mb-4">
-        {/* <h3 className="text-xl font-semibold mb-4">Permanent Address Details</h3> */}
+        <h3 className="text-xl font-semibold mb-4">Permanent Address Details</h3>
 
         {/* Permanent Address */}
-        {/* <div className="mb-4">
+        <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <Label htmlFor="permanent_address">
               Flat/ House no./ Street/ Area/ Village
               <span className="text-red-700">*</span>
             </Label>
-         
-            <div className="flex items-center">
+
+            {/* <div className="flex items-center">
               <Checkbox
                 id="sameAsAadhaar"
                 checked={sameAsAadhaar}
-                onCheckedChange={handleSameAsAadhaar}
+                // onCheckedChange={handleSameAsAadhaar}
                 className="border-slate-400 shadow-sm"
                 disabled={readOnly}
               />
               <Label htmlFor="sameAsAadhaar" className="ml-2">
                 Same as Aadhaar Address
               </Label>
-            </div>
+            </div> */}
           </div>
           <Textarea
             id="permanent_address"
@@ -633,7 +633,7 @@ function AddressDetailsSection({ formData, setFormData }) {
           {errors?.permanent_address && (
             <p className="text-red-500 text-sm">{errors?.permanent_address}</p>
           )}
-        </div> */}
+        </div>
 
         {/* District / Sub-Division / Location Type row */}
         <div className="grid grid-cols-3 gap-6 mb-4">

@@ -88,7 +88,7 @@ function BasicContactDetailsSection({ formData, setFormData, onTabChange }) {
           <div>
             <Label htmlFor="gender_id">Gender<span className="text-red-600 font-bold">*</span></Label>
             <Select
-              value={formData?.gender_id || ""}
+              value={String(formData?.gender_id || "")}
               onValueChange={(value) => handleChange({ target: { name: "gender_id", value } })}
               disabled={readOnly}
             >

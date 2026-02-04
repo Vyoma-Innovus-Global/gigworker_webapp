@@ -239,8 +239,9 @@ export default function WorkersRegistrationForm() {
       gender: basicInfo?.gender_id,
       date_of_birth: formatDate(basicInfo?.date_of_birth),
       father_or_husband_name: basicInfo?.father_or_husband_name,
-      // permanent_address: basicInfo?.permanent_address,
+      permanent_address: basicInfo?.permanent_address,
       permanent_address_district: basicInfo?.perm_district_id,
+      // permanent_address: basicInfo?.aadhaar_address, // Add this validation
       permanent_address_subdivision: basicInfo?.perm_subdivision_id,
       permanent_address_block_or_municipality_or_corporation: basicInfo?.perm_block_municipality_corp_id,
       permanent_address_gram_panchayat_or_ward: basicInfo?.perm_gp_ward_id,
@@ -280,7 +281,7 @@ export default function WorkersRegistrationForm() {
       gender_id: basicInfo?.gender_id,
       date_of_birth: formatDate(basicInfo?.date_of_birth),
       father_or_husband_name: basicInfo?.father_or_husband_name,
-      permanent_address: basicInfo?.permanent_address,
+      permanent_address: basicInfo?.permanent_address, // Map aadhaar_address to permanent_address
       current_address: basicInfo?.current_address,
       district_id: basicInfo?.district_id,
       subdivision_id: basicInfo?.subdivision_id,
@@ -691,6 +692,8 @@ export default function WorkersRegistrationForm() {
               response?.data?.permanent_address || basicInfo?.permanent_address,
             current_address:
               response?.data?.current_address || basicInfo?.current_address,
+            aadhaar_address:
+              response?.data?.permanent_address || basicInfo?.aadhaar_address, // Add this line
             district: response?.data?.district_id
               ? {
                 inner_boundary_id: response.data.district_id,
@@ -792,7 +795,7 @@ export default function WorkersRegistrationForm() {
           });
           // Update basicInfo state with fetched data as needed...
         }
-        if (currentStep === 2 || currentStep === 5) {
+        if (currentStep === 2) {
           const fetchVehicleDetails = async () => {
             try {
               const result = await getGigWorkerVehicleInfoAPI(

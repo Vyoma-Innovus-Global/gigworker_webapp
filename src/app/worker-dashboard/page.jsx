@@ -37,7 +37,6 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      // const pic = localStorage.getItem("pic");
       setUser({
         type: user_type,
         name,
@@ -54,7 +53,6 @@ export default function Home() {
     setIsMounted(true);
   }, []);
 
-  // if (!isMounted || !user) return null;
   const cardData = [
     {
       title: "Register",
@@ -86,49 +84,8 @@ export default function Home() {
       type: "pre-final-submit",
       step: [5],
     },
-    {
-      title: "View Registration Profile",
-      subtitle: `Registration No: ${applicationNo || "N/A"}`,
-      value: "40",
-      icon: Eye,
-      color: "bg-[#295F98]",
-      link: "/workers-registration-form",
-      type: "application-view",
-      step: ["post-final-submit"],
-    },
-    {
-      title: "Update Registration Profile",
-      subtitle: `Registration No: ${applicationNo || "N/A"}`,
-      value: "40",
-      icon: Eye,
-      color: "bg-[#DEAA79]",
-      link: "/workers-registration-form",
-      type: "application-view",
-      step: ["post-final-submit"],
-    },
-    // {
-    //   title: "Download Registration Card",
-    //   subtitle: "",
-    //   value: "40",
-    //   icon: IdCard,
-    //   color: "bg-[#03A791]",
-    //   link: "/id-card",
-    //   type: "application-view",
-    //   step: ["post-final-submit"],
-    // },
-    // {
-    //   title: "Download Certificate",
-    //   subtitle: "",
-    //   value: "40",
-    //   icon: FileBadge,
-    //   color: "bg-[#A594F9]",
-    //   link: "/gig-worker-cert",
-    //   type: "application-view",
-    //   step: ["post-final-submit"],
-    // },
   ];
 
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -136,20 +93,17 @@ export default function Home() {
         Cookies.save("application_no", data?.data[0]?.application_no || "");
         setApplicationNo(data?.data[0]?.application_no || "");
         Cookies.save("aid", data?.data[0]?.application_id || 0);
-        Cookies.save("step", data?.data[0]?.form_step || 0);
         Cookies.save("is_application_aadhar_verified", data?.data[0]?.is_application_aadhar_verified || 0);
         Cookies.save("bank_details_visibility", data?.data[0]?.bank_details_visibility || 0);
         Cookies.save("personal_vehicle_visibility", data?.data[0]?.personal_vehicle_visibility || 0);
         setIsAadhaarVerified(data?.data[0]?.is_application_aadhar_verified || "");
 
-        setStep(data?.data[0]?.form_step || 0);
+        const formStep = data?.data[0]?.form_step || 0;
+        Cookies.save("step", formStep);
+        setStep(formStep);
 
-        if (data?.data[0]?.is_application_aadhar_verified) {
-          setStep("post-final-submit");
-        }
-
-        if (data?.data[0]?.form_step == 0) {
-          router.push('/workers-registration-form')
+        if (formStep === 0) {
+          router.push('/workers-registration-form');
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -203,7 +157,7 @@ export default function Home() {
     </div>
   );
 }
-// Detail Component for cleaner code
+
 const Detail = ({ label, value }) => (
   <div className="bg-white p-3 rounded-lg shadow-sm">
     <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>

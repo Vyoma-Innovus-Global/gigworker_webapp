@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',  // Add this line
   basePath: "/gig-worker",
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    unoptimized: true
   },
-  images: { unoptimized: true },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;

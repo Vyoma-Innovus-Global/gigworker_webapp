@@ -4,11 +4,11 @@ import { callApi } from "../commonApi";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN = Cookies.load("apiToken");
 
-export const getGigWorkerNotAadharVerifiedDetailsAPI = async () => {
+export const getGigWorkerAadharVerifiedDetailsAPI = async () => {
   try {
     const aid = Cookies.load("aid");
 
-    return await callApi("getGigWorkerNotAadharVerifiedDetails", {
+    return await callApi("getGigWorkerAadharVerifiedDetails", {
       application_id: aid,
     });
 

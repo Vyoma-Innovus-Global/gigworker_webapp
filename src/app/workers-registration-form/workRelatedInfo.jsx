@@ -139,6 +139,7 @@ export default function WorkRelatedForm({ formData, setFormData }) {
   };
 
   // Add or update an occupation entry.
+  // Add or update an occupation entry.
   const addOccupation = () => {
     if (editOccupationIndex !== null && originalOccupation) {
       // Convert form values (strings) to numbers (or null) for comparison.
@@ -163,6 +164,11 @@ export default function WorkRelatedForm({ formData, setFormData }) {
           ? 0
           : Number(newOccupation.IsCurrentlyWorking);
 
+      // Get the labels for display
+      const occupation_type_name = getLabel(occupationOptions, occupation_type_id);
+      const nature_industry_name = getLabel(natureIndustryOptions, nature_industry_id);
+      const organization_name = getLabel(organizationOptions, organization_id);
+
       // Check the original record's occupation_id.
       // If it's 0, we always mark the record as "i" (new).
       // Otherwise, compare the new values with the original.
@@ -182,8 +188,11 @@ export default function WorkRelatedForm({ formData, setFormData }) {
           occupation_id: originalOccupation.occupation_id,
         }),
         occupation_type_id,
+        occupation_type_name,
         nature_industry_id,
+        nature_industry_name,
         organization_id,
+        organization_name,
         experience_year,
         is_currently_working,
         operation_type: opType,
@@ -201,20 +210,29 @@ export default function WorkRelatedForm({ formData, setFormData }) {
       setEditOccupationIndex(null);
       setOriginalOccupation(null);
     } else {
+      // Get the labels for display (for new records too)
+      const occupation_type_id = newOccupation.occupation === ""
+        ? null
+        : Number(newOccupation.occupation);
+      const nature_industry_id = newOccupation.natureOfIndustry === ""
+        ? null
+        : Number(newOccupation.natureOfIndustry);
+      const organization_id = newOccupation.organization === ""
+        ? null
+        : Number(newOccupation.organization);
+
+      const occupation_type_name = getLabel(occupationOptions, occupation_type_id);
+      const nature_industry_name = getLabel(natureIndustryOptions, nature_industry_id);
+      const organization_name = getLabel(organizationOptions, organization_id);
+
       // New record: flag as "i".
       const occupationEntry = {
-        occupation_type_id:
-          newOccupation.occupation === ""
-            ? null
-            : Number(newOccupation.occupation),
-        nature_industry_id:
-          newOccupation.natureOfIndustry === ""
-            ? null
-            : Number(newOccupation.natureOfIndustry),
-        organization_id:
-          newOccupation.organization === ""
-            ? null
-            : Number(newOccupation.organization),
+        occupation_type_id,
+        occupation_type_name,
+        nature_industry_id,
+        nature_industry_name,
+        organization_id,
+        organization_name,
         experience_year:
           newOccupation.gigExperience === ""
             ? null
@@ -248,11 +266,21 @@ export default function WorkRelatedForm({ formData, setFormData }) {
       IsCurrentlyWorking: "",
     });
   };
-
   // Prepare an entry for editing.
-  const handleEditOccupation = (index) => {
+  // Prepare an entry for editing.
+  const handleEditOccupation = async (index) => {
     const entry = formData.arr_occupation_info[index];
     setOriginalOccupation({ ...entry });
+
+    // Fetch dependent dropdowns based on the entry's values
+    if (entry.occupation_type_id) {
+      await fetchNatureIndustry(entry.occupation_type_id);
+    }
+
+    if (entry.nature_industry_id) {
+      await fetchOrganizations(entry.nature_industry_id);
+    }
+
     setNewOccupation({
       occupation: entry.occupation_type_id
         ? entry.occupation_type_id.toString()
@@ -263,7 +291,7 @@ export default function WorkRelatedForm({ formData, setFormData }) {
       organization: entry.organization_id
         ? entry.organization_id.toString()
         : "",
-      gigExperience: entry.experience_year
+      gigExperience: entry.experience_year !== null && entry.experience_year !== undefined
         ? entry.experience_year.toString()
         : "",
       IsCurrentlyWorking: entry.is_currently_working
@@ -360,7 +388,7 @@ export default function WorkRelatedForm({ formData, setFormData }) {
                 ))
               ) : (
                 <SelectItem value="loading" disabled>
-                  <span className="flex gap-2"><AlertCircle/> Select occupation first</span>
+                  <span className="flex gap-2"><AlertCircle /> Select occupation first</span>
                 </SelectItem>
               )}
             </SelectContent>
@@ -390,7 +418,7 @@ export default function WorkRelatedForm({ formData, setFormData }) {
                 ))
               ) : (
                 <SelectItem value="loading" disabled>
-                  <span className="flex gap-2"><AlertCircle/> Select nature of industry first</span>
+                  <span className="flex gap-2"><AlertCircle /> Select nature of industry first</span>
                 </SelectItem>
               )}
             </SelectContent>
@@ -495,24 +523,21 @@ export default function WorkRelatedForm({ formData, setFormData }) {
                       </td>
                       <td className="border px-4 py-2 text-center">
                         {occupation.occupation_type_name ? occupation.occupation_type_name :
-                        getLabel(
-                          occupationOptions,
-                          occupation.occupation_type_id
-                        )}
+                          getLabel(
+                            occupationOptions,
+                            occupation.occupation_type_id
+                          )}
                       </td>
                       <td className="border px-4 py-2 text-center">
                         {occupation.nature_industry_name ? occupation.nature_industry_name :
-                        getLabel(
-                          natureIndustryOptions,
-                          occupation.nature_industry_id
-                        )}
+                          getLabel(
+                            natureIndustryOptions,
+                            occupation.nature_industry_id
+                          )}
                       </td>
                       <td className="border px-4 py-2 text-center">
                         {occupation.organization_name ? occupation.organization_name :
-                        getLabel(
-                          organizationOptions,
-                          occupation.organization_id
-                        )}
+                          "N/A"}
                       </td>
                       <td className="border px-4 py-2 text-center">
                         {getLabel(

@@ -224,15 +224,7 @@ function VehicleDetails({ formData, setFormData, initialVehicles }) {
             disabled={readOnly}
           >
             <SelectTrigger id="automobile_cycle_id" disabled={personal_vehicle_visibility == 0}>
-              <SelectValue placeholder="Select Option">
-                {
-                  vehicleMasterData?.vehicle_category?.find(
-                    (item) =>
-                      item.automobile_cycle_type_id ===
-                      formData?.automobile_cycle_id
-                  )?.automobile_cycle_type_name
-                }
-              </SelectValue>
+              <SelectValue placeholder="Select Option" />
             </SelectTrigger>
             <SelectContent>
               {vehicleMasterData?.vehicle_category ? (
@@ -264,13 +256,7 @@ function VehicleDetails({ formData, setFormData, initialVehicles }) {
             disabled={readOnly || formData.automobile_cycle_id == 20 || formData.automobile_cycle_id == 30}
           >
             <SelectTrigger id="vehicle_type_id" disabled={personal_vehicle_visibility == 0}>
-              <SelectValue placeholder="Select Option">
-                {
-                  vehicleMasterData?.vehicle_type_master?.find(
-                    (item) => item.vehicle_type_id === formData?.vehicle_type_id
-                  )?.vehicle_type_name
-                }
-              </SelectValue>
+              <SelectValue placeholder="Select Option" />
             </SelectTrigger>
             <SelectContent>
               {vehicleMasterData?.vehicle_type_master ? (
@@ -305,13 +291,7 @@ function VehicleDetails({ formData, setFormData, initialVehicles }) {
             disabled={readOnly || formData.automobile_cycle_id == 20}
           >
             <SelectTrigger id="is_self_owned">
-              <SelectValue placeholder="Select Option">
-                {formData?.is_self_owned === 1
-                  ? "Own"
-                  : formData?.is_self_owned === 0
-                    ? "Hired"
-                    : ""}
-              </SelectValue>
+              <SelectValue placeholder="Select Option" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1">Own</SelectItem>
@@ -335,14 +315,7 @@ function VehicleDetails({ formData, setFormData, initialVehicles }) {
             disabled={readOnly || formData.automobile_cycle_id == 20}
           >
             <SelectTrigger id="registration_type_id" disabled={personal_vehicle_visibility == 0}>
-              <SelectValue placeholder="Select Option">
-                {
-                  vehicleMasterData?.registration_type_master?.find(
-                    (item) =>
-                      item.registration_type_id === formData?.registration_type_id
-                  )?.registration_type_name
-                }
-              </SelectValue>
+              <SelectValue placeholder="Select Option" />
             </SelectTrigger>
             <SelectContent>
               {vehicleMasterData?.registration_type_master ? (

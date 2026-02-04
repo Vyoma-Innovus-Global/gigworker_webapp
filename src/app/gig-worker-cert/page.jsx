@@ -1,7 +1,7 @@
 "use client"
 import GigWorkerCertificate from '@/components/GigWorkerCertificate'
 import React, { useEffect, useState } from 'react'
-import { getGigWorkerNotAadharVerifiedDetailsAPI } from './api'
+import { getGigWorkerAadharVerifiedDetailsAPI } from './api'
 
 const Page = () => {
 
@@ -53,7 +53,7 @@ const Page = () => {
                 apiData?.emergency_person_contact_one_relation || "",
 
             _application_no: apiData?.application_no || "",
-            _application_date_time: apiData?.created_at || "",
+            _application_date_time: apiData?.aadhar_verified_on || "",
 
             _arr_vehicle_details: vehicleInfo.map(v => ({
                 automobile_cycle: v.VehicleCategoryName || "",
@@ -75,7 +75,7 @@ const Page = () => {
 
 
     const fetchData = async () => {
-        const res = await getGigWorkerNotAadharVerifiedDetailsAPI();
+        const res = await getGigWorkerAadharVerifiedDetailsAPI();
 
         const mappedData = mapApiToCertificateData(res.data);
         setCertificateData(mappedData);

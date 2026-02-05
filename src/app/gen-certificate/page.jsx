@@ -288,10 +288,13 @@ const Page = () => {
   const generateUDINCertificate = async () => {
     setLoadingGenerateUDIN(true);
     try {
-      const response = await generateCertificateByApplicationID();
+      // Generate QR URL using env variable
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+      const qrUrl = `${baseUrl}/view-application?aid=${btoa(applicationID)}&ano=${btoa(applicationNo)}`;
+      setQrCodeUrl(qrUrl);
 
+      await generateCertificateByApplicationID();
       setCertificateGenerated(true);
-      setUdinNo("xxxxxxxxxx");
       await handleFinalSubmit();
       toast({
         title: (

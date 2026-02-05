@@ -84,7 +84,6 @@ const UdinGeneratedDtlsTable = () => {
   const [permBlockOpen, setPermBlockOpen] = useState(false)
   const [permGpOpen, setPermGpOpen] = useState(false)
   const [districts, setDistricts] = useState([])
-  const [permDistricts, setPermDistricts] = useState([])
   const [permSubDivisions, setPermSubDivisions] = useState([])
   const [permBlocks, setPermBlocks] = useState([])
   const [permGramPanchayats, setPermGramPanchayats] = useState([])
@@ -96,12 +95,15 @@ const UdinGeneratedDtlsTable = () => {
   const uid = Cookies.load("authority_user_id")
   const boundary_level_id = Cookies.load("boundary_level_id")
   const boundary_id = Cookies.load("boundary_id")
-
+  console.log("boundary_level_id:", boundary_level_id)
+  console.log("boundary_level_id type:", typeof boundary_level_id)
   // 1. On load: Fetch districts
+  // Around line 107-119, modify to:
   useEffect(() => {
     const getDistricts = async () => {
       try {
         const response = await fetchBoundaryDetailsAPI(1, 1, 1, loginUserID)
+        console.log("Districts response:", response) // ADD THIS
         setDistricts(response?.data || [])
       } catch (error) {
         console.error("Error fetching districts:", error)
@@ -112,21 +114,29 @@ const UdinGeneratedDtlsTable = () => {
     setIsClient(true)
   }, [loginUserID])
 
-  // 2. Fetch Subdivisions after District selection
-  // Set default permanent district
+
+  // Add this after your existing district-fetching useEffect (around line 115)
   useEffect(() => {
-    if (formData?.perm_district_id && permDistricts.length > 0 && !formData?.permDistrict) {
-      const selectedPermDistrict = permDistricts.find(
-        (d) => d.inner_boundary_id === formData?.perm_district_id
+    // Pre-select district if user is at district level (boundary_level_id = 2)
+    if (Number(boundary_level_id) === 2 && boundary_id && districts.length > 0) {
+      const userDistrict = districts.find(
+        (d) => d.inner_boundary_id === Number(boundary_id)
       );
-      if (selectedPermDistrict) {
+
+      if (userDistrict && !formData.permDistrict) {
+        console.log("Pre-selecting district:", userDistrict);
         setFormData((prev) => ({
           ...prev,
-          permDistrict: selectedPermDistrict,
+          permDistrict: userDistrict,
+          perm_district_id: userDistrict.inner_boundary_id,
         }));
       }
     }
-  }, [permDistricts, formData.perm_district_id, formData.permDistrict]);
+  }, [districts, boundary_level_id, boundary_id, formData.permDistrict]);
+
+  // 2. Fetch Subdivisions after District selection
+  // Set default permanent district
+
 
   useEffect(() => {
     if (formData?.permDistrict?.inner_boundary_id) {
@@ -212,19 +222,7 @@ const UdinGeneratedDtlsTable = () => {
   }
 
   // 1. On load: Fetch districts
-  useEffect(() => {
-    const getDistricts = async () => {
-      try {
-        const response = await fetchBoundaryDetailsAPI(1, 1, 1, loginUserID)
-        setDistricts(response?.data || [])
-      } catch (error) {
-        console.error("Error fetching districts:", error)
-        setDistricts([])
-      }
-    }
-    getDistricts()
-    setIsClient(true)
-  }, [loginUserID])
+
 
   // Occupation Api
   useEffect(() => {
@@ -450,7 +448,7 @@ const UdinGeneratedDtlsTable = () => {
               </div>
 
               {/* District Combobox */}
-              {boundary_level_id != 4 && boundary_level_id != 5 && (
+              {Number(boundary_level_id) != 4 && Number(boundary_level_id) != 5 && (
                 <div>
                   <Label htmlFor="district">
                     District<span className="text-red-700">*</span>

@@ -103,7 +103,7 @@ export const updateApplicationApprovalStatusAPI = async () => {
         const udin_token = Cookies.load("udin_token") || "";
         const aid = Cookies.load("aid");
         const ano = Cookies.load("ano");
-        const baseUrl = `${location?.protocol}//${location?.host}`;
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // Use env variable
 
         const application_qr_image = `${baseUrl}/view-application?aid=${btoa(
             aid

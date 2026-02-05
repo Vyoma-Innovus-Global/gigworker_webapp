@@ -63,92 +63,10 @@ const UdinGeneratedDtlsTable = () => {
   const [errors, setErrors] = useState({})
   const [startDate, setStartDate] = useState(moment(new Date()).format("YYYY-MM-DD"))
   const [endDate, setEndDate] = useState(moment(new Date()).format("YYYY-MM-DD"))
-  useEffect(() => {
-    if (!boundary_level_id || !boundary_id) return
 
-    setIsClient(true)
 
-    const bLevel = Number.parseInt(boundary_level_id)
-    const bId = Number.parseInt(boundary_id)
 
-    // Utility to find from a list
-    const findById = (list) => list.find((item) => item.inner_boundary_id == bId)
 
-    if (bLevel === 2 && districts.length > 0) {
-      const selectedDistrict = findById(districts)
-      if (selectedDistrict) {
-        setFormData((prev) => ({
-          ...prev,
-          district: selectedDistrict,
-          perm_district_id: selectedDistrict.inner_boundary_id,
-        }))
-      }
-    } else if (bLevel === 4) {
-      const getSubDivisions = async () => {
-        try {
-          const response = await fetchBoundaryDetailsAPI(2, 0, 1, loginUserID)
-          setSubDivisions(response?.data || [])
-          const selectedSubdivision = findById(subDivisions)
-          if (selectedSubdivision) {
-            setFormData((prev) => ({
-              ...prev,
-              subDivision: selectedSubdivision,
-              perm_sub_divison_id: selectedSubdivision.inner_boundary_id,
-            }))
-          }
-        } catch (error) {
-          console.error("Error fetching sub-divisions:", error)
-          setSubDivisions([])
-        }
-      }
-      getSubDivisions()
-    } else if (bLevel === 5) {
-      const getBlocks = async () => {
-        try {
-          const response = await fetchBoundaryDetailsAPI(4, 0, 0, loginUserID)
-          setBlocks(response?.data || [])
-          const selectedBlock = findById(blocks)
-          if (selectedBlock) {
-            setFormData((prev) => ({
-              ...prev,
-              block: selectedBlock,
-              perm_block_municipality_corp_id: selectedBlock.inner_boundary_id,
-              locationType: "block",
-            }))
-          }
-        } catch (error) {
-          console.error("Error fetching blocks:", error)
-          setBlocks([])
-        }
-      }
-      getBlocks()
-    } else if (bLevel === 7 && municipalities.length > 0) {
-      const selectedMunicipality = findById(municipalities)
-      if (selectedMunicipality) {
-        setFormData((prev) => ({
-          ...prev,
-          municipality: selectedMunicipality,
-          perm_block_municipality_corp_id: selectedMunicipality.inner_boundary_id,
-          locationType: "municipality",
-        }))
-      }
-    } else if (bLevel === 6 && gramPanchayats.length > 0) {
-      const selectedGP = findById(gramPanchayats)
-      if (selectedGP) {
-        setFormData((prev) => ({
-          ...prev,
-          gramPanchayat: selectedGP,
-          perm_gp_ward_id: selectedGP.inner_boundary_id,
-        }))
-      }
-    } else if (bLevel === 8) {
-      setFormData((prev) => ({
-        ...prev,
-        ward_no: String(bId),
-        perm_gp_ward_id: bId,
-      }))
-    }
-  }, [boundary_level_id, boundary_id, districts, municipalities, gramPanchayats])
 
   const loginUserID = Cookies.load("login_user_id") || 1
   const uid = Cookies.load("authority_user_id")
@@ -177,7 +95,7 @@ const UdinGeneratedDtlsTable = () => {
     setErrors(newErrors)
   }
 
-  // 1. On load: Fetch districts
+  // 1. First, fetch districts on load
   useEffect(() => {
     const getDistricts = async () => {
       try {
@@ -194,19 +112,32 @@ const UdinGeneratedDtlsTable = () => {
 
   // 2. Fetch Subdivisions after District selection
   // Set default permanent district
+  // 2. Then, pre-select based on boundary_level_id and boundary_id
   useEffect(() => {
-    if (formData?.perm_district_id && permDistricts.length > 0 && !formData?.permDistrict) {
-      const selectedPermDistrict = permDistricts.find(
-        (d) => d.inner_boundary_id === formData?.perm_district_id
+    if (!boundary_level_id || !boundary_id || districts.length === 0) return;
+
+    const bLevel = Number(boundary_level_id);
+    const bId = Number(boundary_id);
+
+    // If user is at district level (boundary_level_id = 2)
+    if (bLevel === 2) {
+      const selectedDistrict = districts.find(
+        (d) => d.inner_boundary_id === bId
       );
-      if (selectedPermDistrict) {
+
+      if (selectedDistrict && !formData.permDistrict) {
+        console.log("Pre-selecting district:", selectedDistrict);
         setFormData((prev) => ({
           ...prev,
-          permDistrict: selectedPermDistrict,
+          permDistrict: selectedDistrict,
+          perm_district_id: selectedDistrict.inner_boundary_id,
         }));
       }
     }
-  }, [permDistricts, formData.perm_district_id, formData.permDistrict]);
+
+    // Add other boundary levels here if needed (4, 5, 6, etc.)
+
+  }, [districts, boundary_level_id, boundary_id, formData.permDistrict]);
 
   useEffect(() => {
     if (formData?.permDistrict?.inner_boundary_id) {
@@ -219,24 +150,30 @@ const UdinGeneratedDtlsTable = () => {
             1,
             loginUserID
           );
-          if (response?.data?.length == 1) {
-            setFormData((prev) => ({
-              ...prev,
-              permSubDivision: response.data[0],
-              perm_subdivision_id: response.data[0].inner_boundary_id,
-              perm_subdivision_name: response.data[0].inner_boundary_name,
-            }));
+
+          // Check if response exists and has data
+          if (response?.data && Array.isArray(response.data)) {
+            if (response.data.length === 1) {
+              setFormData((prev) => ({
+                ...prev,
+                permSubDivision: response.data[0],
+                perm_sub_divison_id: response.data[0].inner_boundary_id,
+              }));
+            }
+            setPermSubDivisions(response.data);
+          } else {
+            setPermSubDivisions([]);
           }
-          setPermSubDivisions(response.data || []);
         } catch (error) {
           console.error("Error fetching permanent sub-divisions:", error);
+          setPermSubDivisions([]);
         }
       };
       getPermSubDivisions();
     } else {
       setPermSubDivisions([]);
     }
-  }, [formData.permDistrict]);
+  }, [formData.permDistrict, loginUserID]);
 
 
   // get Block/Municipality/Corporation

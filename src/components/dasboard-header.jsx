@@ -19,7 +19,7 @@ const Header = () => {
     try {
       setLoggingOut(true);
       const response = await logout();
-    } catch (error){
+    } catch (error) {
       console.error(error);
     } finally {
       setLoggingOut(false);

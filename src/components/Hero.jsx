@@ -67,92 +67,131 @@ export default function Hero({ landingPageDetails }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Image src={BiswaBangla || "/placeholder.svg"} alt="West Bengal State Emblem" className="h-16 w-auto" />
-                <div className="ml-4">
-                  <h1 className="text-xl font-bold text-gray-900">Department of Labour</h1>
-                  <p className="text-sm text-gray-600">Government of West Bengal</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button variant="link" className="text-blue-600">
-                  <Link href="/">Home</Link>
-                </Button>
+      {/* Header - Improved and Less Cluttered */}
+      {/* Header - Modernized & Streamlined */}
+      <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
 
-                <Button variant="link" className="text-blue-600">
-                  <Link href="#about-us">About the Initiative</Link>
-                </Button>
-
-                <Button variant="link" className="text-blue-600">
-                  <Link href="/contact-us">Contact us</Link>
-                </Button>
-
-                {/* Notifications & Circulars Dropdown */}
-                <div className="relative group">
-                  <Button variant="link" className="text-blue-600 flex items-center">
-                    Notifications & Circulars
-                    <ChevronRight className="ml-1 h-4 w-4 transform group-hover:rotate-90 transition-transform" />
-                  </Button>
-                  <div className="absolute left-0 mt-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                    <div className="py-1">
-                      <Link
-                        href="https://wblabour.gov.in/sites/default/files/upload/circular/Labr-13-Law%20dated-22-01-2025.pdf"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Latest Circular (May 2025) <span className="bg-red-500 text-white px-1 rounded-full animate-pulse text-xs mx-1">New</span>
-                      </Link>
-                      <Link
-                        href="https://wblabour.gov.in/sites/default/files/pdf/the-right-to-information-act.pdf"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Notification (April 2025)
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                {/* RTI Dropdown */}
-                <div className="relative group">
-                  <Button variant="link" className="text-blue-600 flex items-center">
-                    RTI
-                    <ChevronRight className="ml-1 h-4 w-4 transform group-hover:rotate-90 transition-transform" />
-                  </Button>
-                  <div className="absolute left-0 mt-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                    <div className="py-1">
-                      <Link
-                        href="https://wblabour.gov.in/sites/default/files/pdf/the-right-to-information-act.pdf"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        RTI Act, 2005
-                      </Link>
-                      <Link
-                        href="https://wblabour.gov.in/sites/default/files/pdf/wb-rti-rules-2006.pdf"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex items-center"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        WB RTI Rules, 2006
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                <Button variant="link" className="text-blue-600">
-                  <Link href="/admin/login">Admin Login</Link>
-                </Button>
-                <Button variant="link" className="text-blue-600">
-                  <Link href="/login">Gig Worker Login</Link>
-                </Button>
-                <div id="google_translate_element"></div>
+            {/* 1. Brand / Logo Section */}
+            <div className="flex items-center gap-3 cursor-pointer">
+              <Image
+                src={BiswaBangla || "/placeholder.svg"}
+                alt="West Bengal State Emblem"
+                className="h-12 w-auto"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-lg font-bold text-gray-900 leading-none">Department of Labour</h1>
+                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mt-1">Government of West Bengal</p>
               </div>
             </div>
+
+            {/* 2. Navigation - Centered */}
+            <nav className="hidden md:flex items-center gap-8">
+              <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                Home
+              </Link>
+              <Link href="#about-us" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                About
+              </Link>
+
+              {/* Notifications Dropdown */}
+              <div className="relative group h-20 flex items-center">
+                <button className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
+                  Notifications
+                  <ChevronRight className="h-3.5 w-3.5 transform group-hover:rotate-90 transition-transform duration-200" />
+                </button>
+                {/* Dropdown Menu */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-72 rounded-xl shadow-xl bg-white ring-1 ring-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0">
+                  <div className="p-2 space-y-1">
+                    <Link
+                      href="https://wblabour.gov.in/sites/default/files/upload/circular/Labr-13-Law%20dated-22-01-2025.pdf"
+                      className="block px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors group/item"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="bg-blue-100 p-1.5 rounded-md mt-0.5">
+                          <ExternalLink className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-sm font-semibold text-gray-900">Latest Circular</span>
+                            <span className="bg-red-100 text-red-600 px-1.5 py-0.5 rounded text-[10px] font-bold">NEW</span>
+                          </div>
+                          <p className="text-xs text-gray-500">View official documentation</p>
+                        </div>
+                      </div>
+                    </Link>
+                    <Link
+                      href="#"
+                      className="block px-4 py-3 rounded-lg hover:bg-blue-50 transition-colors group/item"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="bg-blue-100 p-1.5 rounded-md mt-0.5">
+                          <ExternalLink className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-gray-900">April 2025 Notice</div>
+                          <p className="text-xs text-gray-500">General updates and news</p>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* RTI Dropdown */}
+              <div className="relative group h-20 flex items-center">
+                <button className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
+                  RTI
+                  <ChevronRight className="h-3.5 w-3.5 transform group-hover:rotate-90 transition-transform duration-200" />
+                </button>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 rounded-xl shadow-xl bg-white ring-1 ring-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0">
+                  <div className="p-2 space-y-1">
+                    <Link
+                      href="https://wblabour.gov.in/sites/default/files/pdf/the-right-to-information-act.pdf"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-blue-50 transition-colors"
+                    >
+                      <ExternalLink className="h-4 w-4 text-blue-600" />
+                      RTI Act, 2005
+                    </Link>
+                    <Link
+                      href="https://wblabour.gov.in/sites/default/files/pdf/wb-rti-rules-2006.pdf"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-blue-50 transition-colors"
+                    >
+                      <ExternalLink className="h-4 w-4 text-blue-600" />
+                      WB RTI Rules, 2006
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <Link href="/contact-us" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                Contact
+              </Link>
+            </nav>
+
+            {/* 3. Actions - Right Side */}
+            <div className="flex items-center gap-4">
+              <div id="google_translate_element" className="hidden xl:block"></div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="hidden sm:inline-flex text-gray-600 hover:text-blue-600 hover:bg-blue-50 font-medium"
+                >
+                  <Link href="/admin/login">Admin</Link>
+                </Button>
+
+                <Button
+                  asChild
+                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-200 transition-all rounded-full px-6"
+                >
+                  <Link href="/login">Gig Worker Login</Link>
+                </Button>
+              </div>
+            </div>
+
           </div>
         </div>
       </header>

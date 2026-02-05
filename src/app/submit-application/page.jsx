@@ -55,6 +55,7 @@ const SubmitApplicationPage = () => {
     const [validAADHAARMsg, setValidAADHAARMsg] = useState("");
     const [resendTimer, setResendTimer] = useState(60);
     const [hydrated, setHydrated] = useState(false);
+    const [qrCodeUrl, setQrCodeUrl] = useState("");
 
     useEffect(() => {
         const application_no = Cookies.load("ano") || "-";
@@ -223,8 +224,14 @@ const SubmitApplicationPage = () => {
     };
 
     const generateUDINCertificate = async () => {
+        console.log("Generating UDIN Certificate...");
         setLoadingGenerateUDIN(true);
         try {
+            // Generate QR URL using env variable
+            const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+            const qrUrl = `${baseUrl}/view-application?aid=${btoa(applicationID)}&ano=${btoa(applicationNo)}`;
+            setQrCodeUrl(qrUrl);
+
             await generateCertificateByApplicationID();
             setCertificateGenerated(true);
             await handleFinalSubmit();

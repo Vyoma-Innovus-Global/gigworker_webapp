@@ -20,7 +20,8 @@ const Dashboard = () => {
 
       if (data?.data) {
         setCounts({
-          TotalGigApplicationCount: data?.data.totalGigApplicationCount,
+          // TotalGigApplicationCount: data?.data.totalGigApplicationCount,
+          TotalGigApplicationCount: data?.data.totalRegisteredGigWorkerCount,
           TotalUdinGeneratedCount: data?.data.totalUdinGeneratedCount,
         });
       }

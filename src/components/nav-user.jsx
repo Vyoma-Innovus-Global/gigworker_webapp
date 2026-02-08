@@ -26,9 +26,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { logout } from "@/app/commonApi.js";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation"; // Use next/navigation for App Router
 
 export function NavUser({ user }) {
-  // --- Cookie Logic ---
   const name = Cookies.load("name")
     ? atob(Cookies.load("name"))
     : Cookies.load("authority_user_desigantion")
@@ -40,8 +40,9 @@ export function NavUser({ user }) {
   const authority_user_type = Cookies.load("authority_user_type_id");
 
   const [cookieData, setCookieData] = useState({});
-  const [hasImageError, setHasImageError] = useState(false); // New state for image error
+  const [hasImageError, setHasImageError] = useState(false);
   const { isMobile } = useSidebar();
+  const router = useRouter(); // This works in App Router
 
   useEffect(() => {
     try {
@@ -59,7 +60,24 @@ export function NavUser({ user }) {
   }, []);
 
   const handleLogout = async () => {
-    const response = await logout();
+    try {
+      const response = await logout();
+      console.log("Logout response:", response);
+
+      // Check if logout was successful
+      if (response && response.status === 0) {
+        console.log("Logout successful");
+        router.push("/"); // Navigate to homepage on success
+      } else {
+        // Handle unexpected response
+        console.error("Unexpected logout response:", response);
+        router.push("/"); // Still redirect, or handle differently
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Optionally still redirect even on error, or show an error message
+      router.push("/");
+    }
   };
 
   const displayUser = {
@@ -71,7 +89,6 @@ export function NavUser({ user }) {
     ? `data:image/png;base64,${displayUser.pic}`
     : displayUser?.avatar;
 
-  // --- Reusable Avatar Component ---
   const UserAvatar = ({ className }) => (
     <div className={`relative flex shrink-0 overflow-hidden rounded-lg bg-slate-200 text-slate-600 ${className}`}>
       {validImageSrc && !hasImageError ? (
@@ -80,7 +97,7 @@ export function NavUser({ user }) {
           alt="Avatar"
           fill
           className="aspect-square h-full w-full object-cover"
-          onError={() => setHasImageError(true)} // If image breaks, switch to icon
+          onError={() => setHasImageError(true)}
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-sidebar-primary-foreground text-sidebar-primary">
@@ -99,20 +116,12 @@ export function NavUser({ user }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              {/* Avatar on Left */}
               <UserAvatar className="h-8 w-8" />
-
-              {/* Text details in Middle */}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {displayUser?.name || "User"}
                 </span>
-                {/* <span className="truncate text-xs">
-                  {displayUser?.type || "Dashboard"}
-                </span> */}
               </div>
-
-              {/* Icon on Right */}
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>

@@ -6,7 +6,7 @@ import Header from "@/components/dasboard-header";
 
 const Layout = ({ children }) => {
 
-  const breadcrumb = [{ name: "Admin" }, { name: "Udin Generated Details" }];
+  const breadcrumb = [{ name: "Admin" }, { name: "Other Generated Details" }];
 
   return (
     <>

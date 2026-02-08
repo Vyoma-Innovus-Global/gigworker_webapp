@@ -6,10 +6,12 @@ import BiswaBangla from "@/assets/biswa_bangla.png";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import { logout } from "@/app/commonApi.js";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [menu, setMenu] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setMenu(!menu);
@@ -18,9 +20,23 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       setLoggingOut(true);
+      console.log("Initiating logout...");
       const response = await logout();
+      console.log("Logout response:", response);
+      
+      // Check if logout was successful
+      if (response && response.status === 0) {
+        console.log("Logout successful, redirecting to homepage...");
+        router.push("/");
+      } else {
+        console.error("Unexpected logout response:", response);
+        // Still redirect even if status is not 0
+        router.push("/");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Logout error:", error);
+      // Redirect even on error since cookies are already cleared
+      router.push("/");
     } finally {
       setLoggingOut(false);
     }
@@ -52,6 +68,7 @@ const Header = () => {
             variant="ghost"
             className="flex items-center gap-2 hover:bg-red-50 text-violet-700 hover:text-red-900 hover:ring-1 hover:ring-red-200"
             onClick={handleLogout}
+            disabled={loggingOut}
           >
             <LogOut className="h-4 w-4" />
             {loggingOut ? 'Wait...' : 'Logout'}

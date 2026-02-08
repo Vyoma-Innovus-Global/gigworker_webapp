@@ -116,10 +116,10 @@ const data = {
       isActive: true,
       type: ["100"], // Admin Type
       items: [
-        {
-          title: "Visibility Settings",
-          url: "/admin/visibility-settings",
-        },
+        // {
+        //   title: "Visibility Settings",
+        //   url: "/admin/visibility-settings",
+        // },
         {
           title: "Add Organization",
           url: "/admin/add-organization",

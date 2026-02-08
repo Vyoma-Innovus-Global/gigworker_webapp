@@ -45,7 +45,7 @@ export const callApi = async (url, request_body) => {
   }
 };
 
-export const callApiWithoutToken = async (url, request_body={}) => {
+export const callApiWithoutToken = async (url, request_body = {}) => {
 
   const response = await fetch(`${API_BASE_URL}${url}`, {
     method: "POST",
@@ -56,8 +56,8 @@ export const callApiWithoutToken = async (url, request_body={}) => {
     body: JSON.stringify(request_body),
   });
 
-    return await response.json();
-  
+  return await response.json();
+
 };
 
 // export const postFileRequest = async (url, request_body) => {
@@ -101,11 +101,11 @@ export const postFileRequest = async (url, request_body) => {
 
       // Check specifically for the file keys ('photo', 'signature')
       if (
-        key === "photo" || 
-        key === "signature" || 
-        key === "pan_card_img" || 
-        key === "driving_license_img" || 
-        key === "bank_passbook_img" || 
+        key === "photo" ||
+        key === "signature" ||
+        key === "pan_card_img" ||
+        key === "driving_license_img" ||
+        key === "bank_passbook_img" ||
         key === "aadhar_image"
       ) {
         // Check if the value is a File object with actual content
@@ -165,6 +165,9 @@ export const postFileRequest = async (url, request_body) => {
   }
 };
 export const logout = async () => {
+  const TOKEN = Cookies.load("apiToken");
+  const user_id = Cookies.load("uid");
+
   try {
     const HEADERS = {
       Authorization: `Bearer ${TOKEN}`,
@@ -174,13 +177,17 @@ export const logout = async () => {
     const requestOptions = {
       method: "POST",
       headers: new Headers(HEADERS),
-      body: JSON.stringify({}), // Empty body for logout request
+      body: JSON.stringify({
+        user_id: user_id,
+      }),
       redirect: "follow",
     };
 
     const response = await fetch(`${API_BASE_URL}LogoutUser`, requestOptions);
-  } catch (error) {
-  } finally {
+    const data = await response.json();
+    console.log("Logout API response:", data);
+
+    // Clear all cookies regardless of response
     Cookies.remove("aadhaar_no");
     Cookies.remove("access_token");
     Cookies.remove("address");
@@ -204,6 +211,35 @@ export const logout = async () => {
     Cookies.remove("uid");
     Cookies.remove("user_type");
     Cookies.remove("user_type_id");
-    window.location.href = "/";
+
+    return data; // Return the response data
+  } catch (error) {
+    console.error("Logout error:", error);
+    // Still clear cookies even if API fails
+    Cookies.remove("aadhaar_no");
+    Cookies.remove("access_token");
+    Cookies.remove("address");
+    Cookies.remove("aid");
+    Cookies.remove("apiToken");
+    Cookies.remove("application_no");
+    Cookies.remove("authority_id");
+    Cookies.remove("authority_user_desigantion");
+    Cookies.remove("authority_user_id");
+    Cookies.remove("authority_user_type_id");
+    Cookies.remove("base64Credentials");
+    Cookies.remove("boundary_id");
+    Cookies.remove("boundary_level_id");
+    Cookies.remove("boundary_name");
+    Cookies.remove("dob");
+    Cookies.remove("gender");
+    Cookies.remove("name");
+    Cookies.remove("otpToken");
+    Cookies.remove("step");
+    Cookies.remove("udin_token");
+    Cookies.remove("uid");
+    Cookies.remove("user_type");
+    Cookies.remove("user_type_id");
+
+    throw error; // Re-throw to handle in component
   }
 };

@@ -2,11 +2,22 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Loading from "./loading";
 import AppSidebar from "@/components/sidebar-layout";
+import { useSelector } from "react-redux";
+// import Footer from "@/components/Footer";
 import Header from "@/components/dasboard-header";
 
 const Layout = ({ children }) => {
+  // const [authToken, setAuthToken] = useState("");
+  // const [user, setUser] = useState("");
+  // const token = useSelector((state) => state.auth.token);
+  // const userDetails = useSelector((state) => state.auth.user);
 
-  const breadcrumb = [{ name: "Admin" }, { name: "Other Generated Details" }];
+  // useEffect(() => {
+  //   setAuthToken(token);
+  //   setUser(userDetails);
+  // }, [token, userDetails]);
+
+  const breadcrumb = [{ name: "Gig Worker" }, { name: "Dashboard" }, { name: "Submit Application" }];
 
   return (
     <>
